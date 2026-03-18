@@ -1,8 +1,28 @@
 import { motion } from "framer-motion";
-import { CheckCircle, ExternalLink } from "lucide-react";
+import { CheckCircle, ExternalLink, X } from "lucide-react";
+import { useState } from "react";
 import couplePhoto from "@/assets/couple-photo.jpg";
 
+type ModalKey = "condominocentrismo" | "sindicoProfissional" | "renan2" | null;
+
 const About = () => {
+  const [openModal, setOpenModal] = useState<ModalKey>(null);
+
+  const modals: Record<Exclude<ModalKey, null>, { title: string; src: string }> = {
+    condominocentrismo: {
+      title: "Certificado — Condominocentrismo",
+      src: "/certificado-condominocentrismo.pdf",
+    },
+    sindicoProfissional: {
+      title: "Certificado — Síndico Profissional",
+      src: "/certificado-sindico-profissional.pdf",
+    },
+    renan2: {
+      title: "Certificado — Renan André de Souza",
+      src: "/certificado-renan-2.pdf",
+    },
+  };
+
   return (
     <section id="sobre" className="section-padding bg-background">
       <div className="container mx-auto">
@@ -133,15 +153,31 @@ const About = () => {
                 para garantir uma gestão mais organizada, com processos claros e
                 acompanhamento eficiente do condomínio.
               </p>
-              <a
-                href="https://drive.google.com/file/d/1gOk6RZtNfecFSpsCYTv1Zx3l_sJZv69T/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline"
-              >
-                <ExternalLink size={16} />
-                Ver certificado do Renan
-              </a>
+              <div className="flex flex-col gap-3">
+                <a
+                  href="https://drive.google.com/file/d/1gOk6RZtNfecFSpsCYTv1Zx3l_sJZv69T/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline"
+                >
+                  <ExternalLink size={16} />
+                  Ver certificado do Renan
+                </a>
+                <button
+                  onClick={() => setOpenModal("sindicoProfissional")}
+                  className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline text-left"
+                >
+                  <ExternalLink size={16} />
+                  Ver certificado — Síndico Profissional
+                </button>
+                <button
+                  onClick={() => setOpenModal("renan2")}
+                  className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline text-left"
+                >
+                  <ExternalLink size={16} />
+                  Ver certificado — Formação Complementar
+                </button>
+              </div>
             </div>
 
             {/* Sheila */}
@@ -154,19 +190,59 @@ const About = () => {
                 específica para atuar na gestão condominial com competência,
                 responsabilidade e foco nas pessoas.
               </p>
-              <a
-                href="https://drive.google.com/file/d/1IGYoIPAbAQZOjerqVBL6vmtVl8u57u3-/view"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline"
-              >
-                <ExternalLink size={16} />
-                Ver certificado da Sheila
-              </a>
+              <div className="flex flex-col gap-3">
+                <a
+                  href="https://drive.google.com/file/d/1IGYoIPAbAQZOjerqVBL6vmtVl8u57u3-/view"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline"
+                >
+                  <ExternalLink size={16} />
+                  Ver certificado da Sheila
+                </a>
+                <button
+                  onClick={() => setOpenModal("condominocentrismo")}
+                  className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline text-left"
+                >
+                  <ExternalLink size={16} />
+                  Ver certificado — Condominocentrismo
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
       </div>
+
+      {/* Modal PDF */}
+      {openModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+          onClick={() => setOpenModal(null)}
+        >
+          <div
+            className="relative bg-white rounded-sm shadow-xl w-[90vw] h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <span className="text-sm font-medium text-foreground">
+                {modals[openModal].title}
+              </span>
+              <button
+                onClick={() => setOpenModal(null)}
+                className="p-1 rounded hover:bg-muted transition-colors"
+                aria-label="Fechar"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <iframe
+              src={modals[openModal].src}
+              className="flex-1 w-full"
+              title={modals[openModal].title}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
